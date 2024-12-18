@@ -1,0 +1,60 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+}
+
+html {
+    font-size: 1vmin;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin: 2vmin 0;
+    font-size: 5rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td,
+td > input {
+    width: 8vmin;
+    height: 8vmin;
+
+    font-size: 2.75rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+td {
+    border: 1px solid grey;
+}
+
+input {
+    border: none;
+}
+
+td:nth-child(3n) {
+    border-right: 2px solid black;
+}
+
+td:nth-child(3n + 1) {
+    border-left: 2px solid black;
+}
+
+tr:nth-child(3n) td {
+    border-bottom: 2px solid black;
+}
+
+tr:nth-child(3n + 1) td {
+    border-top: 2px solid black;
+}
