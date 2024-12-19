@@ -36,6 +36,7 @@ td > input {
 }
 
 td {
+    cursor: default;
     border: 1px solid grey;
 }
 

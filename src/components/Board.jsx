@@ -1,9 +1,22 @@
 import { useState } from "react";
 
 function Cell({ row, col, value, isInput, isWrong, onChange }) {
+    const colors = {
+        red: "#F55",
+        grey: "#EEE",
+        black: "#000",
+        white: "#FFF",
+        lightRed: "#FBB",
+    };
+
     if (!isInput)
         return (
-            <td style={{ cursor: "default", color: isWrong ? "red" : "black" }}>
+            <td
+                style={{
+                    color: isWrong ? colors.red : colors.black,
+                    backgroundColor: isWrong ? colors.lightRed : colors.white,
+                }}
+            >
                 {value}
             </td>
         );
@@ -14,7 +27,7 @@ function Cell({ row, col, value, isInput, isWrong, onChange }) {
                 type="text"
                 value={value || ""}
                 onChange={onChange(row, col)}
-                style={{ backgroundColor: isWrong ? "#F00" : "#EEE" }}
+                style={{ backgroundColor: isWrong ? colors.red : colors.grey }}
             />
         </td>
     );
@@ -32,9 +45,19 @@ export default function Board({ sudoku }) {
             const value = evt.target.value;
             if (value !== "" && !/^[1-9]$/.test(value)) return;
 
-            // checa o resto (primeiro se completou, depois de esta errado)
+            sudoku.setValue(row, col, value ? parseInt(value) : 0);
 
-            sudoku.setValue(row, col, value ? parseInt(value) : "");
+            setErrors(Array.from({ length: 9 }, () => Array(9).fill(false)));
+            // checa o resto (primeiro se completou, depois de esta errado)
+            sudoku.getErrors(row, col).forEach((coords) => {
+                const [errRow, errCol] = coords;
+                setErrors((prev) => {
+                    const newErrors = [...prev];
+                    newErrors[errRow][errCol] = true;
+                    return newErrors;
+                });
+            });
+
             setUpdate((prev) => !prev);
         };
     }
@@ -45,17 +68,14 @@ export default function Board({ sudoku }) {
                 {sudoku.board.map((row, idx1) => (
                     <tr key={idx1}>
                         {row.map((value, idx2) => {
-                            const isInput = sudoku.enabled[idx1][idx2];
-                            const isWrong = errors[idx1][idx2];
-
                             return (
                                 <Cell
                                     key={[idx1, idx2]}
                                     row={idx1}
                                     col={idx2}
                                     value={value}
-                                    isInput={isInput}
-                                    isWrong={isWrong}
+                                    isInput={sudoku.enabled[idx1][idx2]}
+                                    isWrong={errors[idx1][idx2]}
                                     onChange={onCellChange}
                                 />
                             );
